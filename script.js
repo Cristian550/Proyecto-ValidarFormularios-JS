@@ -1,3 +1,22 @@
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBeJ8F-CBiknoFFMn_1ULj6IfDoHgEX8jc",
+    authDomain: "datos-de-formulario-aa5bb.firebaseapp.com",
+    projectId: "datos-de-formulario-aa5bb",
+    storageBucket: "datos-de-formulario-aa5bb.appspot.com",
+    messagingSenderId: "404420106989",
+    appId: "1:404420106989:web:540e2ad2598f15aeedcae4",
+    measurementId: "G-9JGKCEWQRP"
+  };
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+
+// Initialize Cloud Firestore and get a reference to the service
+const db = firebase.firestore();
+
+
 document.getElementById('formulario').addEventListener('submit', (event) =>{
     event.preventDefault()
 
@@ -43,8 +62,18 @@ document.getElementById('formulario').addEventListener('submit', (event) =>{
     if (!errorNombre.textContent && !emailError.textContent && !contrasenaError.textContent){
         
         //BACKEND QUE RECIBA LA INFORMACIÓN
-        alert('El formulario se ha enviado con éxito')
-        document.getElementById('formulario').reset();
+        db.collection("users").add({
+            nombre: entradaNombre.value,
+            email: emailEntrada.value,
+            contrasena: contrasenaEntrada.value
+        })
+        .then((docRef) => {
+            alert('El formulario se ha enviado con éxito', docRef.id);
+            document.getElementById('formulario').reset();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     }
 
 });
